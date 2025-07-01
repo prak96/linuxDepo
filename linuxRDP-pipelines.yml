@@ -1,0 +1,19 @@
+
+
+
+stages:
+- stage: deployToVM
+  displayName: 'deployToVM'
+  jobs:
+  - deployment: 
+    environment:
+     name: 'myLinuxVM'
+     resourceType: VirtualMachine
+     tags: 'centos'
+    strategy:
+     runOnce:
+      deploy:
+       steps:
+       - task: InstallSSHKey@0
+         inputs:
+          

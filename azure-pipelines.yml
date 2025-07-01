@@ -1,0 +1,11 @@
+# Starter pipeline
+
+trigger:
+- none
+
+
+stages:
+- stage: 'Linux Setup'
+  jobs:
+  -  
+
