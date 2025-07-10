@@ -14,6 +14,5 @@ stages:
      runOnce:
       deploy:
        steps:
-       - task: InstallSSHKey@0
-         inputs:
+       
           
