@@ -2,17 +2,33 @@
 
 
 stages:
-- stage: deployToVM
-  displayName: 'deployToVM'
+- stage: rdpToCentOS
+  displayName: 'rdpToCentOS'
   jobs:
-  - deployment: 
+  - deployment: 'rdpToCentOS'
+    displayName: 'rdpToCentOS'
     environment:
-     name: 'myLinuxVM'
+     name: myLinuxVM
      resourceType: VirtualMachine
-     tags: 'centos'
+     tags: centos
     strategy:
      runOnce:
       deploy:
        steps:
-       
-          
+       - script: 
+         
+
+- stage: rdpToUbuntu
+  displayName: rdpToUbuntu
+  jobs:
+  - deployment: 'rdpToUbuntu'
+    displayName: 'rdpToUbuntu'
+    environment:
+      name: myLinuxVM
+      resourceType: VirtualMachine
+      tags: ubuntu
+    strategy:
+     runOnce:
+      deploy:
+        steps:
+        - script: 
