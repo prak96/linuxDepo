@@ -8,9 +8,6 @@ stages:
   jobs:
   - job: setupKeys
     displayName: 'Create SSH key & deploy to both VMs'
-    pool:
-      vmImage: 'ubuntu-latest'
-
     steps:
     - script: |
         Username=testuser
@@ -21,6 +18,7 @@ stages:
 
   - job: connectToVM
     displayName: 'SSH Connection to VM'
+    dependsOn: setupKeys
     steps:
     - script: |
         Username=testuser
