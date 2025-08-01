@@ -2,33 +2,77 @@
 
 
 stages:
-- stage: rdpToCentOS
-  displayName: 'rdpToCentOS'
+
+- stage: GenerateAndDeploySSHKeys
+  displayName: 'Generate & Deploy SSH Keys to VMs'
   jobs:
-  - deployment: 'rdpToCentOS'
-    displayName: 'rdpToCentOS'
-    environment:
-     name: myLinuxVM
-     resourceType: VirtualMachine
-     tags: centos
-    strategy:
-     runOnce:
-      deploy:
-       steps:
-       - script: 
+  - job: setupKeys
+    displayName: 'Create SSH key & deploy to both VMs'
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - script: |
+        Username=testuser
+        Password='coforge@1234'
+        VM_IP=10.192.1.7
+
+        sshpass -p "$Password" ssh-copy-id -o StrictHostKeyChecking=no $Username@$VM_IP
+
+  - job: connectToVM
+    displayName: 'SSH Connection to VM'
+    steps:
+    - script: |
+        Username=testuser
+        Password='coforge@1234'
+        VM_IP=10.192.1.7
+
+        ssh $Username@$VM_IP
+
+
+
+
+
+
+
+
+
+
+
+# - stage: rdpToCentOS
+#   displayName: 'rdpToCentOS'
+#   jobs:
+#   - deployment: 'rdpToCentOS'
+#     displayName: 'rdpToCentOS'
+#     environment:
+#      name: myLinuxVM
+#      resourceType: VirtualMachine
+#      tags: centos
+#     strategy:
+#      runOnce:
+#       deploy:
+#        steps:
+#        - script: 
+
          
 
-- stage: rdpToUbuntu
-  displayName: rdpToUbuntu
-  jobs:
-  - deployment: 'rdpToUbuntu'
-    displayName: 'rdpToUbuntu'
-    environment:
-      name: myLinuxVM
-      resourceType: VirtualMachine
-      tags: ubuntu
-    strategy:
-     runOnce:
-      deploy:
-        steps:
-        - script: 
+
+
+
+# - stage: rdpToUbuntu
+#   displayName: rdpToUbuntu
+#   jobs:
+#   - deployment: 'rdpToUbuntu'
+#     displayName: 'rdpToUbuntu'
+#     environment:
+#       name: myLinuxVM
+#       resourceType: VirtualMachine
+#       tags: ubuntu
+#     strategy:
+#      runOnce:
+#       deploy:
+#         steps:
+#         - script: 
+
+
+
