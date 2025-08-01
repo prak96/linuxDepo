@@ -22,7 +22,7 @@ stages:
         sudo yum install -y sshpass -p
 
         echo ">>> Defining variables"
-        Username=testuser
+        Username=pratul
         Password='coforge@1234'
         VM_IP=10.192.1.7
         key_path="$HOME/.ssh/id_rsa"
@@ -46,7 +46,7 @@ stages:
 
     steps:
     - script: |
-        Username=testuser
+        Username=pratul
         Password='coforge@1234'
         VM_IP=10.192.1.7
 
