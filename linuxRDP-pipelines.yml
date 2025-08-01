@@ -7,28 +7,52 @@ trigger:
 stages:
 
 - stage: GenerateAndDeploySSHKeys
-  displayName: 'Generate & Deploy SSH Keys to VMs'
+  displayName: 'Test sshpass'
   jobs:
   - job: setupKeys
     displayName: 'Create SSH key & deploy to both VMs'
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
+    
     - script: |
+
+        echo ">>> INstalling sshpass"
+        sudo yum update -y -p && sudo yum upgrade -y -p
+        sudo yum install -y sshpass -p
+
+        echo ">>> Defining variables"
         Username=testuser
         Password='coforge@1234'
         VM_IP=10.192.1.7
+        key_path="$HOME/.ssh/id_rsa"
+
+        echo ">>> Generating SSH key if not present..."
+        if [ ! -f "$key_path" ]; then
+          ssh-keygen -t rsa -b 4096 -f "$key_path" -N ""
+        fi
+
+        echo ">>> Copying SSH public key to Bungie-LX1.."
 
         sshpass -p "$Password" ssh-copy-id -o StrictHostKeyChecking=no $Username@$VM_IP
+
+      displayName: 'Install sshpass & Deploy SSH key'
 
   - job: connectToVM
     displayName: 'SSH Connection to VM'
     dependsOn: setupKeys
+    pool:
+      vmImage: 'ubuntu-latest'
+
     steps:
     - script: |
         Username=testuser
         Password='coforge@1234'
         VM_IP=10.192.1.7
 
-        ssh $Username@$VM_IP
+        ssh -o StrictHostKeyChecking=no "$Username@$VM_IP"
+        echo ">>> Connected Successfully"
+      displayName: 'SSH into VM using key'
 
 
 
