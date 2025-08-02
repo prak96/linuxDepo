@@ -47,16 +47,17 @@ stages:
     dependsOn: setupKeys
     pool:
         vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        Username=pratul
+        Password='coforge@1234'
+        VM_IP=10.192.1.7
 
+        ssh -o StrictHostKeyChecking=no "$Username@$VM_IP"
+        echo ">>> Connected Successfully"
+      displayName: 'SSH into VM using key'
   
-          - script: |
-              Username=pratul
-              Password='coforge@1234'
-              VM_IP=10.192.1.7
-
-              ssh -o StrictHostKeyChecking=no "$Username@$VM_IP"
-              echo ">>> Connected Successfully"
-            displayName: 'SSH into VM using key'
+          
 
 
 
