@@ -40,6 +40,7 @@ stages:
               echo ">>> Copying SSH public key to Bungie-LX1.."
 
               sshpass -p "$Password" ssh-copy-id -o StrictHostKeyChecking=no $Username@$VM_IP
+
             displayName: 'Install sshpass & Deploy SSH key'
 
   - job: connectToVM
