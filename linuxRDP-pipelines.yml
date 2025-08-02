@@ -5,60 +5,58 @@ trigger:
       - release/hotfix
 
 stages:
-
 - stage: GenerateAndDeploySSHKeys
   displayName: 'Test sshpass'
   jobs:
   - job: setupKeys
     displayName: 'Create SSH key & deploy to both VMs'
     pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    
-    - script: |
+     vmImage: 'ubuntu-latest'
 
-        echo ">>> INstalling sshpass"
-        sudo yum update -y -p && sudo yum upgrade -y -p
-        sudo yum install -y sshpass -p
+  - deployment: deployToCentOS
+    environment:
+     name: 'TestEnv'
+     resourceType: 'VirtualMachine'
+    strategy:
+     runOnce:
+       deploy:
+        steps:
+          - script: |
+              echo ">>> INstalling sshpass"
+              sudo yum update -y -p && sudo yum upgrade -y -p
+              sudo yum install -y sshpass -p
 
-        echo ">>> Defining variables"
-        Username=pratul
-        Password='coforge@1234'
-        VM_IP=10.192.1.7
-        key_path="$HOME/.ssh/id_rsa"
+              echo ">>> Defining variables"
+              Username=pratul
+              Password='coforge@1234'
+              VM_IP=10.192.1.7
+              key_path="$HOME/.ssh/id_rsa"
 
-        echo ">>> Generating SSH key if not present..."
-        if [ ! -f "$key_path" ]; then
-          ssh-keygen -t rsa -b 4096 -f "$key_path" -N ""
-        fi
+              echo ">>> Generating SSH key if not present..."
+              if [ ! -f "$key_path" ]; then
+                ssh-keygen -t rsa -b 4096 -f "$key_path" -N ""
+              fi
 
-        echo ">>> Copying SSH public key to Bungie-LX1.."
+              echo ">>> Copying SSH public key to Bungie-LX1.."
 
-        sshpass -p "$Password" ssh-copy-id -o StrictHostKeyChecking=no $Username@$VM_IP
-
-      displayName: 'Install sshpass & Deploy SSH key'
+              sshpass -p "$Password" ssh-copy-id -o StrictHostKeyChecking=no $Username@$VM_IP
+            displayName: 'Install sshpass & Deploy SSH key'
 
   - job: connectToVM
     displayName: 'SSH Connection to VM'
     dependsOn: setupKeys
     pool:
-      vmImage: 'ubuntu-latest'
+        vmImage: 'ubuntu-latest'
 
-    steps:
-    - script: |
-        Username=pratul
-        Password='coforge@1234'
-        VM_IP=10.192.1.7
+  
+          - script: |
+              Username=pratul
+              Password='coforge@1234'
+              VM_IP=10.192.1.7
 
-        ssh -o StrictHostKeyChecking=no "$Username@$VM_IP"
-        echo ">>> Connected Successfully"
-      displayName: 'SSH into VM using key'
-
-
-
-
-
-
+              ssh -o StrictHostKeyChecking=no "$Username@$VM_IP"
+              echo ">>> Connected Successfully"
+            displayName: 'SSH into VM using key'
 
 
 
